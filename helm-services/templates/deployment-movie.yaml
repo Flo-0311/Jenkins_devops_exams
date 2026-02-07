@@ -1,0 +1,26 @@
+apiVersion: apps/v1          
+kind: Deployment            
+metadata:                  
+  name: {{ .Values.castService.name }}      
+  labels:
+    app: {{ .Values.castService.app }}   
+spec:                         
+  selector:                 
+    matchLabels:             
+      app: {{ .Values.castService.selector.app }} 
+  replicas: 1                
+  strategy:                   
+    type: RollingUpdate       
+  template:                  
+    metadata:
+      labels:
+        app: {{ .Values.castService.labels.app }}
+    spec:
+      containers:
+        - name: {{ .Values.castService.container.name }}      
+          image: {{ .Values.castService.container.image }}        
+          ports:
+            - containerPort: 8000
+          env:
+          - name: DATABASE_URI
+            value: {{ .Values.castService.container.env.DATABASE_URI }}

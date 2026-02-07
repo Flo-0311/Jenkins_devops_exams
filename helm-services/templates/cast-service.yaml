@@ -1,14 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "helm-services.fullname" . }}
+  name: {{ .Values.castService.name  }}
   labels:
     {{- include "helm-services.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.castService.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+    - port: {{ .Values.castService.port }}
+      targetPort: {{ .Values.castService.targetPort }}
+      nodePort: {{ .Values.castService.nodePort }}
       protocol: TCP
       name: http
   selector:
