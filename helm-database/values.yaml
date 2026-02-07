@@ -1,0 +1,13 @@
+pvCast:
+  name: cast-pv
+  storage: 1Gi
+  accessMode: ReadWriteOnce
+  hostPath: /var/lib/rancher/k3s/storage/cast
+  storageClassName: ""
+
+pvMovie:
+  name: movie-pv
+  storage: 2Gi
+  accessMode: ReadWriteOnce
+  hostPath: /var/lib/rancher/k3s/storage/movie
+  storageClassName: ""
