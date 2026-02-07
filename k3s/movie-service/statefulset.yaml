@@ -1,0 +1,86 @@
+
+apiVersion: v1
+kind: PersistentVolume                
+metadata:
+  name: movie-pv             
+spec:
+  capacity:
+    storage: 1Gi                                              
+  accessModes:
+    - ReadWriteOnce                                            
+  hostPath:
+    path: "/var/lib/rancher/k3s/storage/movies"                       
+  storageClassName: ""        
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim             
+metadata:
+  name: pvc-movie             
+spec:
+  accessModes:
+    - ReadWriteOnce                                                    
+  storageClassName: ""
+  volumeName: movie-pv                                    
+  resources:
+    requests:
+      storage: 128Mi
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: moviedb       
+spec:                      
+  selector:               
+    app: moviedb  
+  type: ClusterIP
+  ports:
+  - name: http
+    protocol: TCP        
+    port: 5432              
+    targetPort: 5432        
+  type: ClusterIP         
+
+                                     
+
+---
+
+apiVersion: apps/v1                            
+kind: StatefulSet                                    
+metadata:                                            
+  name: moviedb                                     
+spec:
+  serviceName: moviedb                                   
+  replicas: 1                                 
+  selector:                                        
+    matchLabels:                                    
+      app: moviedb                                 
+  template:                                        
+    metadata: 
+      labels:
+        app: moviedb                              
+    spec:                                          
+      volumes:                                       
+        - name: moviedb                        
+          persistentVolumeClaim:
+            claimName: pvc-movie                
+      containers:
+        - name: moviedb                             
+          image: postgres:12.1-alpine
+          ports:
+            - containerPort: 5432                    
+          volumeMounts:                              
+            - mountPath: "/var/lib/postgresql/data"    
+              name: moviedb                     
+          env:                                      
+            - name: POSTGRES_USER
+              value: movie_db_username
+            - name: POSTGRES_PASSWORD
+              value: movie_db_password
+            - name: POSTGRES_DB                     
+              value: movie_db_dev
+                    

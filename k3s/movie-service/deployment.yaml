@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: movieservicenodeport
+spec:
+  type: NodePort              
+  selector:
+    app: movieservice     
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8000               
+      targetPort: 8001            
+      nodePort: 30000           
+---
+
+apiVersion: apps/v1          
+kind: Deployment            
+metadata:                  
+  name: movieservice      
+  labels:
+    app: movieservice    
+spec:                         
+  selector:                 
+    matchLabels:             
+      app: movieservice   
+  replicas: 1                
+  strategy:                   
+    type: RollingUpdate       
+  template:                  
+    metadata:
+      labels:
+        app: movieservice 
+    spec:
+      containers:
+        - name: movieservice      
+          image: fm92962/jenkins_devops_exams-movie_service:v1        
+          ports:
+            - containerPort: 8000
+          env:
+          - name: DATABASE_URI
+            value: postgresql://movie_db_username:movie_db_password@moviedb/movie_db_dev
+          - name: CAST_SERVICE_HOST_URL
+            value: http://cast_service:8000/api/v1/casts/
