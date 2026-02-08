@@ -8,7 +8,7 @@ image:
   repository: fm92962/jenkins_devops_exams-cast_service
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v1"
+  tag: "v2"
 
 imagePullSecrets: 
   - name: "regcred"
@@ -83,3 +83,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+httpRoute:
+  enabled: false
