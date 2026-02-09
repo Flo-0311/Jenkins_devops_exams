@@ -76,9 +76,19 @@ pipeline {
                     '''
 
                     sh '''
-                    kubectl apply -f ./k3s/cast-service/statefulset.yaml -n dev
-                    kubectl apply -f ./k3s/movie-service/statefulset.yaml -n dev
-                    sleep 5
+                    cp ./k3s/cast-service/statefulset.yaml statefulset.yaml
+                    cat statefulset.yaml
+                    sed -i "s/name: cast-pv/name: cast-pv-dev/g" statefulset.yaml
+                    sed -i "s/volumeName: cast-pv/volumeName: cast-pv-dev/g" statefulset.yaml
+                    cat statefulset.yaml
+                    kubectl apply -f ./statefulset.yaml -n dev
+                    cp ./k3s/movie-service/statefulset.yaml statefulset.yaml
+                    cat statefulset.yaml
+                    sed -i "s/name: movie-pv/name: movie-pv-dev/g" statefulset.yaml
+                    sed -i "s/volumeName: movie-pv/volumeName: movie-pv-dev/g" statefulset.yaml
+                    cat statefulset.yaml
+                    kubectl apply -f ./statefulset.yaml -n dev
+                    sleep 120
                     '''
 
                     sh '''
@@ -86,7 +96,7 @@ pipeline {
                     cat values.yaml
                     sed -i "s|^  tag:.*|  tag: \"${docker_tag}\"|" values.yaml
                     cat values.yaml
-                    helm upgrade --install cast --values=values.yaml -n dev
+                    helm upgrade --install cast ./chart-cast --values=values.yaml -n dev
                     sleep 5
                     '''
 
@@ -95,7 +105,7 @@ pipeline {
                     cat values.yaml
                     sed -i "s|^ tag:.*|  tag: \"${docker_tag}\"|" values.yaml
                     cat values.yaml
-                    helm upgrade --install movie --values=values.yaml -n dev
+                    helm upgrade --install movie ./chart-movie --values=values.yaml -n dev
                     sleep 5
                     '''
 
@@ -129,9 +139,19 @@ pipeline {
                     '''
 
                     sh '''
-                    kubectl apply -f ./k3s/cast-service/statefulset.yaml -n qa
-                    kubectl apply -f ./k3s/movie-service/statefulset.yaml -n qa
-                    sleep 5
+                    cp ./k3s/cast-service/statefulset.yaml statefulset.yaml
+                    cat statefulset.yaml
+                    sed -i "s/name: cast-pv/name: cast-pv-qa/g" statefulset.yaml
+                    sed -i "s/volumeName: cast-pv/volumeName: cast-pv-qa/g" statefulset.yaml
+                    cat statefulset.yaml
+                    kubectl apply -f ./statefulset.yaml -n qa
+                    cp ./k3s/movie-service/statefulset.yaml statefulset.yaml
+                    cat statefulset.yaml
+                    sed -i "s/name: movie-pv/name: movie-pv-qa/g" statefulset.yaml
+                    sed -i "s/volumeName: movie-pv/volumeName: movie-pv-qa/g" statefulset.yaml
+                    cat statefulset.yaml
+                    kubectl apply -f ./statefulset.yaml -n qa
+                    sleep 120
                     '''
 
                     sh '''
@@ -139,7 +159,7 @@ pipeline {
                     cat values.yaml
                     sed -i "s|^  tag:.*|  tag: \"${docker_tag}\"|" values.yaml
                     cat values.yaml
-                    helm upgrade --install cast --values=values.yaml -n qa
+                    helm upgrade --install cast ./chart-cast --values=values.yaml -n qa
                     sleep 5
                     '''
 
@@ -148,7 +168,7 @@ pipeline {
                     cat values.yaml
                     sed -i "s|^ tag:.*|  tag: \"${docker_tag}\"|" values.yaml
                     cat values.yaml
-                    helm upgrade --install movie --values=values.yaml -n qa
+                    helm upgrade --install movie ./chart-movie --values=values.yaml -n qa
                     sleep 5
                     '''
 
@@ -182,9 +202,19 @@ pipeline {
                     '''
 
                     sh '''
-                    kubectl apply -f ./k3s/cast-service/statefulset.yaml -n staging
-                    kubectl apply -f ./k3s/movie-service/statefulset.yaml -n staging
-                    sleep 5
+                    cp ./k3s/cast-service/statefulset.yaml statefulset.yaml
+                    cat statefulset.yaml
+                    sed -i "s/name: cast-pv/name: cast-pv-staging/g" statefulset.yaml
+                    sed -i "s/volumeName: cast-pv/volumeName: cast-pv-staging/g" statefulset.yaml
+                    cat statefulset.yaml
+                    kubectl apply -f ./statefulset.yaml -n staging
+                    cp ./k3s/movie-service/statefulset.yaml statefulset.yaml
+                    cat statefulset.yaml
+                    sed -i "s/name: movie-pv/name: movie-pv-staging/g" statefulset.yaml
+                    sed -i "s/volumeName: movie-pv/volumeName: movie-pv-staging/g" statefulset.yaml
+                    cat statefulset.yaml
+                    kubectl apply -f ./statefulset.yaml -n staging
+                    sleep 120
                     '''
 
                     sh '''
@@ -192,7 +222,7 @@ pipeline {
                     cat values.yaml
                     sed -i "s|^  tag:.*|  tag: \"${docker_tag}\"|" values.yaml
                     cat values.yaml
-                    helm upgrade --install cast --values=values.yaml -n staging
+                    helm upgrade --install cast ./chart-cast --values=values.yaml -n staging
                     sleep 5
                     '''
 
@@ -201,7 +231,7 @@ pipeline {
                     cat values.yaml
                     sed -i "s|^ tag:.*|  tag: \"${docker_tag}\"|" values.yaml
                     cat values.yaml
-                    helm upgrade --install movie --values=values.yaml -n staging
+                    helm upgrade --install movie ./chart-movie --values=values.yaml -n staging
                     sleep 5
                     '''
 
@@ -248,9 +278,19 @@ pipeline {
                     '''
 
                     sh '''
-                    kubectl apply -f ./k3s/cast-service/statefulset.yaml -n prod
-                    kubectl apply -f ./k3s/movie-service/statefulset.yaml -n prod
-                    sleep 5
+                    cp ./k3s/cast-service/statefulset.yaml statefulset.yaml
+                    cat statefulset.yaml
+                    sed -i "s/name: cast-pv/name: cast-pv-prod/g" statefulset.yaml
+                    sed -i "s/volumeName: cast-pv/volumeName: cast-pv-prod/g" statefulset.yaml
+                    cat statefulset.yaml
+                    kubectl apply -f ./statefulset.yaml -n prod
+                    cp ./k3s/movie-service/statefulset.yaml statefulset.yaml
+                    cat statefulset.yaml
+                    sed -i "s/name: movie-pv/name: movie-pv-prod/g" statefulset.yaml
+                    sed -i "s/volumeName: movie-pv/volumeName: movie-pv-prod/g" statefulset.yaml
+                    cat statefulset.yaml
+                    kubectl apply -f ./statefulset.yaml -n prod
+                    sleep 120
                     '''
 
                     sh '''
@@ -258,7 +298,7 @@ pipeline {
                     cat values.yaml
                     sed -i "s|^  tag:.*|  tag: \"${docker_tag}\"|" values.yaml
                     cat values.yaml
-                    helm upgrade --install cast --values=values.yaml -n prod
+                    helm upgrade --install cast ./chart-cast --values=values.yaml -n prod
                     sleep 5
                     '''
 
@@ -267,7 +307,7 @@ pipeline {
                     cat values.yaml
                     sed -i "s|^ tag:.*|  tag: \"${docker_tag}\"|" values.yaml
                     cat values.yaml
-                    helm upgrade --install movie --values=values.yaml -n prod
+                    helm upgrade --install movie ./chart-movie --values=values.yaml -n dev prod
                     sleep 5
                     '''
 
