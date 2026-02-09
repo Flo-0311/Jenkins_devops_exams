@@ -14,13 +14,10 @@ pipeline {
 
         stage('Docker build cast'){
 
-            when {
-                changeset "cast-service/**"
-            }
-
             steps{
                 script {
                     sh '''
+                    sleep 1
                     docker build -t ${docker_id}/${cast}:${docker_tag} ./cast-service
                     docker login -u ${docker_id} -p ${docker_pass}
                     docker push ${docker_id}/${cast}:${docker_tag}
@@ -32,10 +29,6 @@ pipeline {
         }
 
         stage('Docker build movie'){
-
-            when {
-                changeset "movie-service/**"
-            }
 
             steps{
                 script {
@@ -52,10 +45,6 @@ pipeline {
         }
 
         stage('Docker build nginx'){
-
-            when {
-                changeset "nginx/**"
-            }
 
             steps {
                 script {
@@ -246,6 +235,7 @@ pipeline {
                 parameters {
                     string(name:'username', defaultValue: 'user', description: 'Username of the user pressing Ok')
                 }
+            }
 
 
             steps {
@@ -311,4 +301,5 @@ pipeline {
             body: "For more info on the pipeline , check out the console output at ${env.BUILD_URL}"
             }
         }
+
 }
