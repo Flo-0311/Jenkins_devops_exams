@@ -17,6 +17,7 @@ pipeline {
             steps{
                 script {
                     sh '''
+                    sleep 1
                     docker build -t ${docker_id}/${cast}:${docker_tag} ./cast-service
                     docker login -u ${docker_id} -p ${docker_pass}
                     docker push ${docker_id}/${cast}:${docker_tag}
