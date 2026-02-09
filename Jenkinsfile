@@ -17,7 +17,6 @@ pipeline {
             steps{
                 script {
                     sh '''
-                    sleep 1
                     docker build -t ${docker_id}/${cast}:${docker_tag} ./cast-service
                     docker login -u ${docker_id} -p ${docker_pass}
                     docker push ${docker_id}/${cast}:${docker_tag}
@@ -230,8 +229,8 @@ pipeline {
             }
 
              input{
-                message "Press Ok to continue deploy in production"
-                submitterParamter "username"
+                message "Press Ok to continue deploy in production",
+                submitterParamter "username",
                 parameters {
                     string(name:'username', defaultValue: 'user', description: 'Username of the user pressing Ok')
                 }
