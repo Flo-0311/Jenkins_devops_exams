@@ -17,6 +17,7 @@ pipeline {
 
             steps{
                 script {
+                    echo "Branch: ${env.BRANCH_NAME}"
                     sh '''
                     echo "Name: ${branch_name}"
                     docker build -t ${docker_id}/${cast}:${docker_tag} ./cast-service
