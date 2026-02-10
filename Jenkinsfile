@@ -260,7 +260,7 @@ pipeline {
 
              input{
                 message "Press Ok to continue deploy in production"
-                ok "Starting Deploying in production"
+                ok "Starting deploying in production"
                 submitterParameter "username"
                 parameters {
                     string(name:'username', defaultValue: 'user', description: 'Username of the user pressing Ok')
