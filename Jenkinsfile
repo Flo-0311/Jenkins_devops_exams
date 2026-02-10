@@ -248,32 +248,31 @@ pipeline {
             }
         }
 
-        stage('Waiting for Manually prod deployment'){
-
-             input{
-                message "Press Ok to continue deploy in production"
-                ok "Starting deploying in production"
-                submitterParameter "username"
-                parameters {
-                    string(name:'username', defaultValue: 'user', description: 'Username of the user pressing Ok')
-                }
-            }
-
-        }
-
-        stage('Deploying in prod'){
+        stage('Deployment in prod'){
 
             environment {
                 KUBECONFIG = credentials("config")
             }
 
             when {
+                beforeInput true
                 branch 'master'
             }
 
+             input{
+                message "Press Ok to continue deploy in production"
+                ok "Starting Deploy"
+                submitterParameter "username"
+                parameters {
+                    string(name:'username', defaultValue: 'user', description: 'Username of the user pressing Ok')
+                }
+            }
+
+
             steps {
-                script{
-                     sh '''
+                script {
+
+                    sh '''
                     rm -Rf .kube
                     mkdir .kube
                     cat $KUBECONFIG > .kube/config
@@ -322,6 +321,7 @@ pipeline {
                     kubectl apply -f deployment.yaml -n prod
                     sleep 5
                     '''
+
                 }
             }
         }
