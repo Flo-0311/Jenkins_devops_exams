@@ -248,15 +248,7 @@ pipeline {
             }
         }
 
-        stage('Deployment in prod'){
-
-            environment {
-                KUBECONFIG = credentials("config")
-            }
-
-            when {
-                branch 'master'
-            }
+        stage('Waiting for Manually prod deployment'){
 
              input{
                 message "Press Ok to continue deploy in production"
@@ -267,11 +259,21 @@ pipeline {
                 }
             }
 
+        }
+
+        stage('Deploying in prod'){
+
+            environment {
+                KUBECONFIG = credentials("config")
+            }
+
+            when {
+                branch 'master'
+            }
 
             steps {
-                script {
-
-                    sh '''
+                script{
+                     sh '''
                     rm -Rf .kube
                     mkdir .kube
                     cat $KUBECONFIG > .kube/config
@@ -320,7 +322,6 @@ pipeline {
                     kubectl apply -f deployment.yaml -n prod
                     sleep 5
                     '''
-
                 }
             }
         }
