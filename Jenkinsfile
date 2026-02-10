@@ -8,7 +8,7 @@ pipeline {
         nginx = "nginx-proxy"
         docker_tag = "v.${BUILD_ID}"
         docker_pass = credentials("Docker_hub_pass")
-        branch_name = ${BRANCH_NAME}
+        branch_name = "${BRANCH_NAME}"
     }
 
     stages {
