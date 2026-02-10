@@ -18,7 +18,7 @@ pipeline {
             steps{
                 script {
                     sh '''
-                    echo "${branch_name}"
+                    echo "Name: ${branch_name}"
                     docker build -t ${docker_id}/${cast}:${docker_tag} ./cast-service
                     docker login -u ${docker_id} -p ${docker_pass}
                     docker push ${docker_id}/${cast}:${docker_tag}
