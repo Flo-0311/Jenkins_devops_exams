@@ -8,6 +8,7 @@ pipeline {
         nginx = "nginx-proxy"
         docker_tag = "v.${BUILD_ID}"
         docker_pass = credentials("Docker_hub_pass")
+        branch_name = ${BRANCH_NAME}
     }
 
     stages {
@@ -17,6 +18,7 @@ pipeline {
             steps{
                 script {
                     sh '''
+                    echo "${branch_name}"
                     docker build -t ${docker_id}/${cast}:${docker_tag} ./cast-service
                     docker login -u ${docker_id} -p ${docker_pass}
                     docker push ${docker_id}/${cast}:${docker_tag}
@@ -308,7 +310,7 @@ pipeline {
                     cat values.yaml
                     sed -i "s|^ tag:.*|  tag: \"${docker_tag}\"|" values.yaml
                     cat values.yaml
-                    helm upgrade --install movie ./chart-movie --values=values.yaml -n dev prod
+                    helm upgrade --install movie ./chart-movie --values=values.yaml -n prod
                     sleep 5
                     '''
 
