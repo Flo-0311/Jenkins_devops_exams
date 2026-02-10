@@ -255,8 +255,7 @@ pipeline {
             }
 
             when {
-                beforeInput true
-                branch 'master'
+                branch 'origin/master'
             }
 
              input{
