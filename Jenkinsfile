@@ -13,58 +13,16 @@ pipeline {
 
     stages {
 
-        stage('Docker build cast and movie images'){
-            steps {
-                script{
-                    sh'''
-                    docker build -t ${docker_id}/${cast}:${docker_tag} ./cast-service
-                    docker build -t ${docker_id}/${movie}:${docker_tag} ./movie-service
-                    '''
+        stage('Docker build cast'){
 
-
-                }
-            }
-        }
-
-        stage('Testing the availability of databases '){
-            steps{
-                script{
-                    sh'''
-                    docker run -d --name castdb -p 5432:5432 ${docker_id}/${cast}:${docker_tag}
-                    until docker exec castdb pg_isready -U postgres; do
-                       echo "Waiting for castdb"
-                       sleep 3
-                       done
-                    echo "castdb ist ready!"
-                    docker stop castdb
-                    docker rm castdb
-                    sleep 10
-                    docker run -d --name moviedb -p 5432:5432 ${docker_id}/${movie}:${docker_tag}
-                    until docker exec moviedb pg_isready -U postgres; do
-                       echo "Waiting for moviedb"
-                       sleep 3
-                       done
-                    echo "moviedb ist ready!
-                    docker stop moviedb
-                    docker rm moviedb
-                    '''
-                    
-                }
-            }
-        }
-
-
- 
-        stage('Docker push cast and movie images'){
 
             steps{
                 script {
-                    echo "Aktueller Branch: ${env.BRANCH_NAME}"
                     
                     sh '''
+                    docker build -t ${docker_id}/${cast}:${docker_tag} ./cast-service
                     docker login -u ${docker_id} -p ${docker_pass}
                     docker push ${docker_id}/${cast}:${docker_tag}
-                    docker push ${docker_id}/${movie}:${docker_tag}
                     sleep 5
                     '''
                 }
@@ -72,8 +30,23 @@ pipeline {
 
         }
 
+        stage('Docker build movie'){
 
-        stage('Docker build and push nginx'){
+            steps{
+                script {
+
+                    sh '''
+                    docker build -t ${docker_id}/${movie}:${docker_tag} ./movie-service
+                    docker login -u ${docker_id} -p ${docker_pass}
+                    docker push ${docker_id}/${movie}:${docker_tag}
+                    sleep 5
+                    '''
+                }
+
+            }
+        }
+
+        stage('Docker build nginx'){
 
             steps {
                 script {
