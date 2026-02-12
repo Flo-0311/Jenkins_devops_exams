@@ -8,18 +8,23 @@ pipeline {
         nginx = "nginx-proxy"
         docker_tag = "v.${BUILD_ID}"
         docker_pass = credentials("Docker_hub_pass")
-        branch_name = "${BRANCH_NAME}"
+    
     }
 
     stages {
 
         stage('Docker build cast'){
 
+
+             when {
+                branch 'master'
+            }
+
             steps{
                 script {
-                    echo "Branch: ${env.BRANCH_NAME}"
+                    echo "Aktueller Branch: ${env.BRANCH_NAME}"
+                    
                     sh '''
-                    echo "Name: ${branch_name}"
                     docker build -t ${docker_id}/${cast}:${docker_tag} ./cast-service
                     docker login -u ${docker_id} -p ${docker_pass}
                     docker push ${docker_id}/${cast}:${docker_tag}
@@ -258,7 +263,7 @@ pipeline {
             }
 
             when {
-                branch 'origin/master'
+                branch 'master'
             }
 
              input{
